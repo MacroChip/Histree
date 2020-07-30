@@ -1,7 +1,7 @@
 {
-  "name": "Getting Started Example",
+  "name": "Histree",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "View your browsing history as a tree",
   "permissions": [
     "cookies",
     "tabs",
@@ -25,7 +25,6 @@
       "js": ["jquery-3.5.1.slim.min.js", "contentScript.js"]
     }
   ],
-  "options_page": "options.html",
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {
