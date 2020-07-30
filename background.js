@@ -15,6 +15,16 @@ chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
   }]);
 });
 
+const redraw = () => {
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
+    edges: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.edges).flat()),
+  };
+  var options = { layout: { hierarchical: true } };
+  var network = new vis.Network(container, data, options);
+}
+
 var id = 0;
 
 const tabs = {};
@@ -36,12 +46,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     edges.push({ from: lastNode.id, to: id });
   }
   id += 1;
-
-  var container = document.getElementById("mynetwork");
-  var data = {
-    nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
-    edges: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.edges).flat()),
-  };
-  var options = { layout: { hierarchical: true } };
-  var network = new vis.Network(container, data, options);
+  redraw();
 });
