@@ -31,9 +31,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const nodes = tabs[tabId].nodes;
   const edges = tabs[tabId].edges;
   nodes.push({ id: id, label: request.href });
-  edges.push({ from: id });
-  if (edges[edges.length - 2]) {
-    edges[edges.length - 2].to = id;
+  const lastNode = nodes[nodes.length - 2];
+  if (lastNode) {
+    edges.push({ from: lastNode.id, to: id });
   }
   id += 1;
 
