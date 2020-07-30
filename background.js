@@ -17,21 +17,30 @@ chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
 
 var id = 0;
 
-var nodes = [];
-
-var edges = [];
+const tabs = {};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(`${sender.tab.id} clicked ${request.href}`);
-
+  const tabId = sender.tab.id;
+  console.log(`${tabId} clicked ${request.href}`);
+  if (!tabs[tabId]) {
+    tabs[tabId] = {
+      nodes: [],
+      edges: [],
+    };
+  }
+  const nodes = tabs[tabId].nodes;
+  const edges = tabs[tabId].edges;
   nodes.push({ id: id, label: request.href });
-  edges.push({ from: id, to: id + 1 });
+  edges.push({ from: id });
+  if (edges[edges.length - 2]) {
+    edges[edges.length - 2].to = id;
+  }
   id += 1;
 
   var container = document.getElementById("mynetwork");
   var data = {
-    nodes: new vis.DataSet(nodes),
-    edges: new vis.DataSet(edges),
+    nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
+    edges: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.edges).flat()),
   };
   var options = {};
   var network = new vis.Network(container, data, options);
