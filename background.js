@@ -21,7 +21,11 @@ const redraw = () => {
     nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
     edges: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.edges).flat()),
   };
-  var options = { layout: { hierarchical: true } };
+  var options = {
+    layout: {
+      hierarchical: true
+    },
+  };
   var network = new vis.Network(container, data, options);
 }
 
