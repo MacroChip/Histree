@@ -31,27 +31,25 @@ const tabs = {};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const tabId = sender.tab.id;
-  console.log(`${tabId} message`);
-  if (request.type === "NEW_TAB") {
+  console.log(`${tabId} message ${request.type}`);
+  if (request.type === "NEW_PAGE") {
     if (!tabs[tabId]) {
       console.log(`new tab at ${Date.now()}`);
       tabs[tabId] = {
         nodes: [{ id: id, label: request.href }],
         edges: [],
       };
-      id += 1;
-      redraw();
+    } else {
+      console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
+      const nodes = tabs[tabId].nodes;
+      const edges = tabs[tabId].edges;
+      nodes.push({ id: id, label: request.href });
+      const lastNode = nodes[nodes.length - 2];
+      if (lastNode) {
+        edges.push({ from: lastNode.id, to: id });
+      }
     }
-    return;
+    id += 1;
+    redraw();
   }
-  console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
-  const nodes = tabs[tabId].nodes;
-  const edges = tabs[tabId].edges;
-  nodes.push({ id: id, label: request.href });
-  const lastNode = nodes[nodes.length - 2];
-  if (lastNode) {
-    edges.push({ from: lastNode.id, to: id });
-  }
-  id += 1;
-  redraw();
 });
