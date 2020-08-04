@@ -1,11 +1,5 @@
 'use strict';
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.history.onVisited.addListener(historyItem => {
-    console.log(historyItem);
-  });
-});
-
 chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
   chrome.declarativeContent.onPageChanged.addRules([{
     conditions: [new chrome.declarativeContent.PageStateMatcher({
@@ -19,7 +13,11 @@ const redraw = () => {
   var container = document.getElementById("mynetwork");
   var data = {
     nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
-    edges: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.edges).flat()),
+    edges: new vis.DataSet(
+      Object.entries(tabs)
+        .map(([key, value]) => value.edges)
+        .flat()
+    ),
   };
   var options = {
     layout: {
@@ -33,6 +31,12 @@ var id = 0;
 
 const tabs = {};
 
+const makeNode = (label) => {
+  const newNode = { id, label };
+  id += 1;
+  return newNode;
+};
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const tabId = sender.tab.id;
   console.log(`${tabId} message ${request.type}`);
@@ -40,20 +44,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (!tabs[tabId]) {
       console.log(`new tab at ${Date.now()}`);
       tabs[tabId] = {
-        nodes: [{ id: id, label: request.href }],
+        nodes: [makeNode(request.href)],
         edges: [],
       };
     } else {
       console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
       const nodes = tabs[tabId].nodes;
       const edges = tabs[tabId].edges;
-      nodes.push({ id: id, label: request.href });
+      nodes.push(makeNode(request.href));
       const lastNode = nodes[nodes.length - 2];
       if (lastNode) {
-        edges.push({ from: lastNode.id, to: id });
+        edges.push({ from: lastNode.id, to: id - 1 });
       }
     }
-    id += 1;
     redraw();
   }
 });
