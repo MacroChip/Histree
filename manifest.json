@@ -7,7 +7,6 @@
     "tabs",
     "activeTab",
     "history",
-    "declarativeContent",
     "<all_urls>",
     "storage",
     "http://*/*",
