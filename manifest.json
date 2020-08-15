@@ -3,7 +3,6 @@
   "version": "1.0",
   "description": "View your browsing history as a tree",
   "permissions": [
-    "tabs",
     "http://*/*",
     "https://*/*"
   ],

@@ -5,3 +5,4 @@ tabs[openerTabId] could NPE if extension opened after opener is open. could init
 green circle around tabs that are still open
 reparent nodes so that you can disasociate new tabs from their parent or re-associate
 thumbnails of page capture to see what page looked like when you were there
+remove new tab node

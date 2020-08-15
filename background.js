@@ -63,7 +63,7 @@ chrome.tabs.onCreated.addListener((tab) => {
   if (!tabs[tabId]) {
     console.log(`New tab node`);
     tabs[tabId] = {
-      nodes: [makeNode(tab.url || tab.pendingUrl || `Loading...`)],
+      nodes: [makeNode(`New tab`)],
       edges: [],
     };
   }
