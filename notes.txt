@@ -1,0 +1,5 @@
+always collect data even when ui isn't up
+try separate trees in vis network for each tree
+tabs[openerTabId] could NPE if extension opened after opener is open. could init the opener map so that the tree can backfill the opener node
+green circle around tabs that are still open
+reparent nodes so that you can disasociate new tabs from their parent or re-associate
