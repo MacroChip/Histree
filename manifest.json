@@ -3,12 +3,7 @@
   "version": "1.0",
   "description": "View your browsing history as a tree",
   "permissions": [
-    "cookies",
     "tabs",
-    "activeTab",
-    "history",
-    "<all_urls>",
-    "storage",
     "http://*/*",
     "https://*/*"
   ],
