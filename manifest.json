@@ -18,6 +18,9 @@
     "page": "background.html",
     "persistent": false
   },
+  "icons": {
+    "128": "icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
