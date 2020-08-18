@@ -32,30 +32,6 @@ const makeNode = (label) => {
   return newNode;
 };
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  const tabId = sender.tab.id;
-  console.log(`${tabId} message ${request.type}`);
-  if (request.type === "NEW_PAGE") {
-    if (!tabs[tabId]) { //if the addon wasn't up when the new tab listener fired
-      console.log(`new tab from content script at ${Date.now()}`);
-      tabs[tabId] = {
-        nodes: [makeNode(request.href)],
-        edges: [],
-      };
-    } else {
-      console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
-      const nodes = tabs[tabId].nodes;
-      const edges = tabs[tabId].edges;
-      nodes.push(makeNode(request.href));
-      const lastNode = nodes[nodes.length - 2];
-      if (lastNode) {
-        edges.push({ from: lastNode.id, to: id - 1 });
-      }
-    }
-    redraw();
-  }
-});
-
 chrome.tabs.onCreated.addListener((tab) => {
   const openerTabId = tab.openerTabId;
   const tabId = tab.id;
@@ -77,4 +53,27 @@ chrome.tabs.onCreated.addListener((tab) => {
     });
   }
   redraw();
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log(`${tabId} updated to ${JSON.stringify(changeInfo, null, 2)} changeinfo and tab ${JSON.stringify(tab, null, 2)}`);
+  if (changeInfo.status === "complete") {
+    if (!tabs[tabId]) { //if the addon wasn't up when the new tab listener fired
+      console.log(`new tab at ${Date.now()}`);
+      tabs[tabId] = {
+        nodes: [makeNode(tab.url)],
+        edges: [],
+      };
+    } else {
+      console.log(`${tabId} clicked ${tab.url} at ${Date.now()}`);
+      const nodes = tabs[tabId].nodes;
+      const edges = tabs[tabId].edges;
+      nodes.push(makeNode(tab.url));
+      const lastNode = nodes[nodes.length - 2];
+      if (lastNode) {
+        edges.push({ from: lastNode.id, to: id - 1 });
+      }
+    }
+    redraw();
+  }
 });
