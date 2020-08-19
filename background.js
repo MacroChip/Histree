@@ -1,30 +1,21 @@
 'use strict';
 
-const redraw = () => {
-  var container = document.getElementById("mynetwork");
-  var data = {
-    nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
-    edges: new vis.DataSet(
-      Object.entries(tabs)
-        .map(([key, value]) => value.edges)
-        .concat(tabConnections)
-        .flat()
-    ),
-  };
-  var options = {
-    layout: {
-      hierarchical: {
-        nodeSpacing: 300,
-      },
-    },
-  };
-  var network = new vis.Network(container, data, options);
-}
+const DEBUG = true;
 
 var id = 0;
 
 const tabs = {};
 const tabConnections = [];
+
+const redraw = () => {
+  chrome.extension.sendMessage({
+    type: 'RES_GET_GRAPH',
+    data: {
+      tabs,
+      tabConnections,
+    },
+  });
+}
 
 const makeNode = (label) => {
   const newNode = { id, label };
@@ -52,6 +43,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         edges.push({ from: lastNode.id, to: id - 1 });
       }
     }
+    redraw();
+  }
+  if (request.type === "REQ_GET_GRAPH") {
     redraw();
   }
 });
