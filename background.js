@@ -62,6 +62,10 @@ chrome.tabs.onCreated.addListener((tab) => {
     };
   }
   if (openerTabId && tabId) {
+    if (!tabs[openerTabId]) {
+      console.log(`No data for ${openerTabId}. Perhaps the tab was already open before the extension was loaded`);
+      return;
+    }
     console.log(`New tab edge`);
     const openerNodes = tabs[openerTabId].nodes;
     const newTabNodes = tabs[tabId].nodes;
