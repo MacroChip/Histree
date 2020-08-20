@@ -1,9 +1,6 @@
 console.log(`graph ui alive`);
 
-let tabs;
-let tabConnections;
-
-const redraw = () => {
+const redraw = (tabs, tabConnections) => {
   var container = document.getElementById("mynetwork");
   var data = {
     nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
@@ -27,9 +24,7 @@ const redraw = () => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log(`onMessage ${JSON.stringify(request, null, 2)}`);
   if (request.type === "RES_GET_GRAPH") {
-    tabs = request.data.tabs;
-    tabConnections = request.data.tabConnections;
-    redraw();
+    redraw(request.data.tabs, request.data.tabConnections);
   }
 });
 
