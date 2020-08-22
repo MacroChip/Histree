@@ -31,3 +31,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.sendMessage({ type: "REQ_GET_GRAPH" });
 
 console.log(`sent req get graph`);
+
+document.getElementById("reset").addEventListener("click", (e) => {
+  chrome.runtime.sendMessage({ type: "RESET" });
+});

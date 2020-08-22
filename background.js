@@ -2,10 +2,9 @@
 
 const DEBUG = true;
 
-var id = 0;
-
-const tabs = {};
-const tabConnections = [];
+let id = 0;
+let tabs = {};
+let tabConnections = [];
 
 const redraw = () => {
   chrome.extension.sendMessage({
@@ -46,6 +45,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     redraw();
   }
   if (request.type === "REQ_GET_GRAPH") {
+    redraw();
+  }
+  if (request.type === "RESET") {
+    id = 0;
+    tabs = {};
+    tabConnections = [];
     redraw();
   }
 });
