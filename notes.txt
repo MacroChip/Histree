@@ -8,3 +8,4 @@ reparent nodes so that you can disasociate new tabs from their parent or re-asso
 thumbnails of page capture to see what page looked like when you were there
 remove new tab node
 secure messages passed back and forth. I think any webpage could receive and send messages to and from me
+use tabs.onUpdated?
