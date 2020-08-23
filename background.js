@@ -5,6 +5,18 @@ const DEBUG = true;
 let id = 0;
 let tabs = {};
 let tabConnections = [];
+chrome.storage.local.get(['id', 'tabs', 'tabConnections'], function(result) {
+  console.log(`data initialized as ${JSON.stringify(result, null, 2)}`);
+  if (result.id) {
+    id = result.id;
+  }
+  if (result.tabs) {
+    tabs = result.tabs;
+  }
+  if (result.tabConnections) {
+    tabConnections = result.tabConnections;
+  }
+});
 
 const redraw = () => {
   chrome.extension.sendMessage({
@@ -17,26 +29,31 @@ const redraw = () => {
 }
 
 const makeNode = (label) => {
-  const newNode = { id, label };
-  id += 1;
-  return newNode;
+  return new Promise(res => {
+    const newNode = { id, label };
+    id += 1;
+    chrome.storage.local.set({'id': id}, function() {
+      console.log(`id saved as ${id}`);
+      res(newNode);
+    });
+  });
 };
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   const tabId = sender.tab.id;
   console.log(`${tabId} message ${request.type}`);
   if (request.type === "NEW_PAGE") {
     if (!tabs[tabId]) { //if the addon wasn't up when the new tab listener fired
       console.log(`new tab from content script at ${Date.now()}`);
       tabs[tabId] = {
-        nodes: [makeNode(request.href)],
+        nodes: [await makeNode(request.href)],
         edges: [],
       };
     } else {
       console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
       const nodes = tabs[tabId].nodes;
       const edges = tabs[tabId].edges;
-      nodes.push(makeNode(request.href));
+      nodes.push(await makeNode(request.href));
       const lastNode = nodes[nodes.length - 2];
       if (lastNode) {
         edges.push({ from: lastNode.id, to: id - 1 });
@@ -55,14 +72,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-chrome.tabs.onCreated.addListener((tab) => {
+chrome.tabs.onCreated.addListener(async (tab) => {
   const openerTabId = tab.openerTabId;
   const tabId = tab.id;
   console.log(`Tab ${tabId} opened by ${openerTabId} at ${Date.now()}`);
   if (!tabs[tabId]) {
     console.log(`New tab node`);
     tabs[tabId] = {
-      nodes: [makeNode(`New tab`)],
+      nodes: [await makeNode(`New tab`)],
       edges: [],
     };
   }

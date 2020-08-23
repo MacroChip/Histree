@@ -1,3 +1,4 @@
+initializing data is a race condition to mutating the data (like in response to a tab being opened). make all reads and writes to state async and to and from storage api
 always collect data even when ui isn't up
 pressing back button and going to new page should branch from that node, not the leaf
 right justify a new tab so that it looks like it saw the new tab immediately
