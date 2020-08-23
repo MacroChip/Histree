@@ -2,28 +2,44 @@
 
 const DEBUG = true;
 
-let id = 0;
-let tabs = {};
-let tabConnections = [];
-chrome.storage.local.get(['id', 'tabs', 'tabConnections'], function(result) {
-  console.log(`data initialized as ${JSON.stringify(result, null, 2)}`);
-  if (result.id) {
-    id = result.id;
-  }
-  if (result.tabs) {
-    tabs = result.tabs;
-  }
-  if (result.tabConnections) {
-    tabConnections = result.tabConnections;
-  }
-});
+const datastore = class {
+  let id = 0;
+  let tabs = {};
+  let tabConnections = [];
+  let loaded = false;
 
-const redraw = () => {
+  data() {
+    return new Promise(res => {
+      if (!loaded) {
+        chrome.storage.local.get(['id', 'tabs', 'tabConnections'], function(result) {
+          console.log(`data initialized as ${JSON.stringify(result, null, 2)}`);
+          if (result.id) {
+            id = result.id;
+          }
+          if (result.tabs) {
+            tabs = result.tabs;
+          }
+          if (result.tabConnections) {
+            tabConnections = result.tabConnections;
+          }
+        });
+      }
+      res({
+        id,
+        tabs,
+        tabConnections,
+      });
+    });
+  };
+};
+
+const redraw = async () => {
+  let data = await datastore.data();
   chrome.extension.sendMessage({
     type: 'RES_GET_GRAPH',
     data: {
-      tabs,
-      tabConnections,
+      tabs: data.tabs,
+      tabConnections: data.tabConnections,
     },
   });
 }
