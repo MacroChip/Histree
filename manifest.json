@@ -25,5 +25,14 @@
     "default_popup": "popup.html",
     "default_icon": "icon128.png"
   },
+  "commands": {
+    "show-tree": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+H",
+        "mac": "Command+Shift+H"
+      },
+      "description": "Show history tree"
+    }
+  },
   "manifest_version": 2
 }

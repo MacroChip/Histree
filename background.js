@@ -82,6 +82,12 @@ const makeNode = async (label) => {
   return newNode;
 };
 
+chrome.commands.onCommand.addListener(command => {
+  if (command === "show-tree") {
+    chrome.tabs.create({ url: chrome.extension.getURL('graph_ui.html') });
+  }
+});
+
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   const tabId = sender.tab.id;
   console.log(`${tabId} message ${request.type}`);
