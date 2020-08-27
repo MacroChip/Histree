@@ -96,14 +96,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (!data.tabs[tabId]) { //if the addon wasn't up when the new tab listener fired
       console.log(`new tab from content script at ${Date.now()}`);
       data.tabs[tabId] = {
-        nodes: [await makeNode(request.href)],
+        nodes: [await makeNode(request.title)],
         edges: [],
       };
     } else {
-      console.log(`${tabId} clicked ${request.href} at ${Date.now()}`);
+      console.log(`${tabId} clicked ${request.href} title ${request.title} at ${Date.now()}`);
       const nodes = data.tabs[tabId].nodes;
       const edges = data.tabs[tabId].edges;
-      nodes.push(await makeNode(request.href));
+      nodes.push(await makeNode(request.title));
       const lastNode = nodes[nodes.length - 2];
       if (lastNode) {
         edges.push({ from: lastNode.id, to: data.id.id - 1 });
