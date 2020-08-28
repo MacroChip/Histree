@@ -2,8 +2,9 @@ console.log(`graph ui alive`);
 
 const redraw = (tabs, tabConnections) => {
   var container = document.getElementById("mynetwork");
+  const nodeList = Object.entries(tabs).map(([key, value]) => value.nodes).flat();
   var data = {
-    nodes: new vis.DataSet(Object.entries(tabs).map(([key, value]) => value.nodes).flat()),
+    nodes: new vis.DataSet(nodeList),
     edges: new vis.DataSet(
       Object.entries(tabs)
         .map(([key, value]) => value.edges)
@@ -19,6 +20,12 @@ const redraw = (tabs, tabConnections) => {
     },
   };
   var network = new vis.Network(container, data, options);
+  network.addEventListener("doubleClick", (e) => {
+    console.log(`double clicked ${JSON.stringify(e.nodes, null, 2)}`);
+    if (e.nodes[0]) {
+      window.open(nodeList.find(node => node.id === e.nodes[0]).url);
+    }
+  });
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

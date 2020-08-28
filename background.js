@@ -75,9 +75,9 @@ const redraw = async () => {
   });
 }
 
-const makeNode = async (label) => {
+const makeNode = async (label, url) => {
   let data = await datastore.data();
-  const newNode = { "id": data.id.id, label };
+  const newNode = { "id": data.id.id, label, url };
   data.id.id += 1;
   return newNode;
 };
@@ -96,14 +96,14 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (!data.tabs[tabId]) { //if the addon wasn't up when the new tab listener fired
       console.log(`new tab from content script at ${Date.now()}`);
       data.tabs[tabId] = {
-        nodes: [await makeNode(request.title)],
+        nodes: [await makeNode(request.title, request.href)],
         edges: [],
       };
     } else {
       console.log(`${tabId} clicked ${request.href} title ${request.title} at ${Date.now()}`);
       const nodes = data.tabs[tabId].nodes;
       const edges = data.tabs[tabId].edges;
-      nodes.push(await makeNode(request.title));
+      nodes.push(await makeNode(request.title, request.href));
       const lastNode = nodes[nodes.length - 2];
       if (lastNode) {
         edges.push({ from: lastNode.id, to: data.id.id - 1 });
@@ -128,7 +128,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
   if (!data.tabs[tabId]) {
     console.log(`New tab node`);
     data.tabs[tabId] = {
-      nodes: [await makeNode(`New tab`)],
+      nodes: [await makeNode(`New tab`, "chrome://newtab")], //TODO: newtab can't be launched from js?
       edges: [],
     };
   }
