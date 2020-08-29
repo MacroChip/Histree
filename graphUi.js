@@ -18,6 +18,9 @@ const redraw = (tabs, tabConnections) => {
         nodeSpacing: 300,
       },
     },
+    interaction: {
+      hover: true,
+    },
   };
   var network = new vis.Network(container, data, options);
   network.addEventListener("doubleClick", (e) => {
@@ -25,6 +28,10 @@ const redraw = (tabs, tabConnections) => {
     if (e.nodes[0]) {
       window.open(nodeList.find(node => node.id === e.nodes[0]).url);
     }
+  });
+  network.addEventListener("hoverNode", e => {
+    console.log(`hovered node ${e.node}`);
+    console.log(`which is url ${nodeList.find(node => node.id === e.node).url}`);
   });
 }
 
