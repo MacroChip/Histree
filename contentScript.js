@@ -1,6 +1,6 @@
 chrome.runtime.sendMessage({ type: "NEW_PAGE", href: window.location.href, title: document.title });
 let target = document.querySelector('title');
-new window.MutationObserver(
+let observer = new window.MutationObserver(
     mutations => {
         mutations.forEach(
             mutation => {
@@ -8,4 +8,9 @@ new window.MutationObserver(
             }
         );
     }
-).observe(target, { subtree: true, characterData: true, childList: true });
+);
+observer.observe(target, { subtree: true, characterData: true, childList: true });
+
+chrome.runtime.connect().onDisconnect.addListener(() => {
+    observer.disconnect();
+});
