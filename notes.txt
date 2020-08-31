@@ -1,3 +1,4 @@
+add timestamps so you can browse like normal history by time
 hover node to see url
 pressing back button and going to new page should branch from that node, not the leaf
 right justify a new tab so that it looks like it saw the new tab immediately
