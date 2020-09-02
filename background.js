@@ -11,6 +11,14 @@ class Datastore {
     this.loaded = false;
   }
 
+  _data() {
+    return {
+      id: this.id,
+      tabs: this.tabs,
+      tabConnections: this.tabConnections,
+    };
+  }
+
   data() {
     return new Promise(res => {
       if (!this.loaded) {
@@ -26,28 +34,16 @@ class Datastore {
             this.tabConnections = result.tabConnections;
           }
           this.loaded = true;
-          res({
-            id: this.id,
-            tabs: this.tabs,
-            tabConnections: this.tabConnections,
-          });
+          res(this._data());
         });
       } else {
-        res({
-          id: this.id,
-          tabs: this.tabs,
-          tabConnections: this.tabConnections,
-        });
+        res(this._data());
       }
     });
   };
 
   save() {
-    const newData = {
-      id: this.id,
-      tabs: this.tabs,
-      tabConnections: this.tabConnections,
-    };
+    const newData = this._data();
     chrome.storage.local.set(newData, () => {
       console.log(`Saved data as ${JSON.stringify(newData, null, 2)}`);
     });
