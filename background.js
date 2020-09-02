@@ -44,16 +44,19 @@ class Datastore {
 
   save() {
     const newData = this._data();
-    chrome.storage.local.set(newData, () => {
-      console.log(`Saved data as ${JSON.stringify(newData, null, 2)}`);
+    return new Promise(res => {
+      chrome.storage.local.set(newData, () => {
+        console.log(`Saved data as ${JSON.stringify(newData, null, 2)}`);
+        res();
+      });
     });
   }
 
-  reset() {
+  async reset() {
     this.id = { id: 0 };
     this.tabs = {};
     this.tabConnections = [];
-    this.save();
+    await this.save();
   }
 };
 
@@ -111,7 +114,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     redraw();
   }
   if (request.type === "RESET") {
-    datastore.reset();
+    await datastore.reset();
     redraw();
   }
 });
