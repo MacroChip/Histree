@@ -17,3 +17,6 @@ investigate
 transpile to lower ecmascript for older browsers
 firefox
 ctrl shift h keeps only one instance of tree up
+are tab ids consistent across restarts when "pick up where you left of" setting is set? wondering if the tree will continue between restarts
+maybe I shouild be doing this by historyitem referrer ids
+if last node in tab was same url that you are about to add, dont add it. (this would require keeping tabIds in node info)
