@@ -161,6 +161,8 @@ chrome.history.onVisited.addListener(async historyItem => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  console.log(`onUpdated`, changeInfo);
+  if (changeInfo.url || changeInfo.title) {
     console.log(`${tabId} updated Url ${changeInfo.url} title ${changeInfo.title}`);
     let data = await datastore.data();
     if (changeInfo.url) {
@@ -175,4 +177,5 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       }
     }
     redraw();
+  }
 });
