@@ -25,7 +25,7 @@ class Datastore {
     return new Promise(res => {
       if (!this.loaded) {
         chrome.storage.local.get(['id', 'tabs', 'tabConnections', 'tabUpdated'], (result) => {
-          console.log(`data initialized as ${JSON.stringify(result, null, 2)}`);
+          console.log(`data initialized as`, result);
           if (result.id) {
             this.id = result.id;
           }
@@ -51,7 +51,7 @@ class Datastore {
     const newData = this._data();
     return new Promise(res => {
       chrome.storage.local.set(newData, () => {
-        console.log(`Saved data as ${JSON.stringify(newData, null, 2)}`);
+        console.log(`Saved data as`, newData);
         res();
       });
     });
@@ -144,7 +144,7 @@ const addNodeToExistingTabTree = async (data, tabId, title, url) => {
 };
 
 chrome.history.onVisited.addListener(async historyItem => {
-  console.log(`History onVisited ${JSON.stringify(historyItem, null, 2)}`);
+  console.log(`History onVisited`, historyItem);
   let data = await datastore.data();
   const tabId = data.tabUpdated[historyItem.url]
   if (!data.tabs[tabId]) {
@@ -161,18 +161,18 @@ chrome.history.onVisited.addListener(async historyItem => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log(`${tabId} updated Url ${changeInfo.url} title ${changeInfo.title}`);
-  let data = await datastore.data();
-  if (changeInfo.url) {
-    data.tabUpdated[changeInfo.url] = tabId; //this does not work if multiple tabs visit the same url before the history listener fires to consume this assignment
-  }
-  if (changeInfo.title) {
-    //TODO restrict this to title updates after onVisited
-    console.log(`onupdated tabs at tab id ${JSON.stringify(data.tabs[tabId], null, 2)}`);
-    if (data.tabs[tabId]) {
-      const nodes = data.tabs[tabId].nodes;
-      nodes[nodes.length - 1].label = changeInfo.title;
+    console.log(`${tabId} updated Url ${changeInfo.url} title ${changeInfo.title}`);
+    let data = await datastore.data();
+    if (changeInfo.url) {
+      data.tabUpdated[changeInfo.url] = tabId; //this does not work if multiple tabs visit the same url before the history listener fires to consume this assignment
     }
-  }
-  redraw();
+    if (changeInfo.title) {
+      //TODO restrict this to title updates after onVisited
+      console.log(`onupdated tabs at tab id ${tabId}`, data.tabs[tabId]);
+      if (data.tabs[tabId]) {
+        const nodes = data.tabs[tabId].nodes;
+        nodes[nodes.length - 1].label = changeInfo.title;
+      }
+    }
+    redraw();
 });

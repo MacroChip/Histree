@@ -36,7 +36,7 @@ const redraw = (tabs, tabConnections) => {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(`onMessage ${JSON.stringify(request, null, 2)}`);
+  console.log(`onMessage`, request);
   if (request.type === "RES_GET_GRAPH") {
     redraw(request.data.tabs, request.data.tabConnections);
   }
