@@ -150,7 +150,7 @@ chrome.history.onVisited.addListener(async historyItem => {
   if (!data.tabs[tabId]) {
     console.log(`Making first node for tabId ${tabId} in history.onVisisted`);
     data.tabs[tabId] = {
-      nodes: [await makeNode(`${historyItem.title}`, `${historyItem.url}`, historyItem.lastVisitTime)],
+      nodes: [await makeNode(historyItem.title, historyItem.url, historyItem.lastVisitTime)],
       edges: [],
     };
   } else {
