@@ -2,7 +2,13 @@ console.log(`graph ui alive`);
 
 const redraw = (tabs, tabConnections) => {
   var container = document.getElementById("mynetwork");
-  const nodeList = Object.entries(tabs).map(([key, value]) => value.nodes).flat();
+  const nodeList = Object.entries(tabs)
+    .map(([key, value]) => value.nodes)
+    .flat()
+    .map(item => {
+      item.label = `${item.label}\n${new Date(item.lastVisitTime).toLocaleString()}`;
+      return item;
+    });
   var data = {
     nodes: new vis.DataSet(nodeList),
     edges: new vis.DataSet(

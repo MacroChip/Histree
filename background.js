@@ -80,9 +80,9 @@ const redraw = async () => {
   });
 }
 
-const makeNode = async (label, url) => {
+const makeNode = async (label, url, lastVisitTime) => {
   let data = await datastore.data();
-  const newNode = { "id": data.id.id, label, url };
+  const newNode = { "id": data.id.id, label, url, lastVisitTime };
   data.id.id += 1;
   return newNode;
 };
@@ -113,7 +113,7 @@ chrome.tabs.onCreated.addListener(async (tab) => {
   if (!data.tabs[tabId]) {
     console.log(`New tab node`);
     data.tabs[tabId] = {
-      nodes: [await makeNode(`New tab`, "chrome://newtab")], //TODO: newtab can't be launched from js?
+      nodes: [await makeNode(`New tab`, "chrome://newtab", Date.now())], //TODO: newtab can't be launched from js?
       edges: [],
     };
   }
@@ -133,10 +133,10 @@ chrome.tabs.onCreated.addListener(async (tab) => {
   redraw();
 });
 
-const addNodeToExistingTabTree = async (data, tabId, title, url) => {
+const addNodeToExistingTabTree = async (data, tabId, title, url, lastVisitTime) => {
   const nodes = data.tabs[tabId].nodes;
   const edges = data.tabs[tabId].edges;
-  nodes.push(await makeNode(title, url));
+  nodes.push(await makeNode(title, url, lastVisitTime));
   const lastNode = nodes[nodes.length - 2];
   if (lastNode) {
     edges.push({ from: lastNode.id, to: data.id.id - 1 });
@@ -150,12 +150,12 @@ chrome.history.onVisited.addListener(async historyItem => {
   if (!data.tabs[tabId]) {
     console.log(`Making first node for tabId ${tabId} in history.onVisisted`);
     data.tabs[tabId] = {
-      nodes: [await makeNode(`${historyItem.title}`, `${historyItem.url}`)],
+      nodes: [await makeNode(`${historyItem.title}`, `${historyItem.url}`, historyItem.lastVisitTime)],
       edges: [],
     };
   } else {
     console.log(`Existing node(s) found for tabId ${tabId} in history.onVisited`);
-    await addNodeToExistingTabTree(data, tabId, historyItem.title, historyItem.url);
+    await addNodeToExistingTabTree(data, tabId, historyItem.title, historyItem.url, historyItem.lastVisitTime);
   }
   redraw();
 });
@@ -170,7 +170,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
     if (changeInfo.title) {
       //TODO restrict this to title updates after onVisited
-      console.log(`onupdated tabs at tab id ${tabId}`, data.tabs[tabId]);
+      console.log(`onupdated title at tabId ${tabId}`, data.tabs[tabId]);
       if (data.tabs[tabId]) {
         const nodes = data.tabs[tabId].nodes;
         nodes[nodes.length - 1].label = changeInfo.title;
