@@ -1,7 +1,7 @@
 console.log(`graph ui alive`);
 
 const redraw = (tabs, tabConnections) => {
-  var container = document.getElementById("mynetwork");
+  const container = document.getElementById("mynetwork");
   const nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
@@ -9,7 +9,7 @@ const redraw = (tabs, tabConnections) => {
       item.label = `${item.label}\n${new Date(item.lastVisitTime).toLocaleString()}`;
       return item;
     });
-  var data = {
+  const data = {
     nodes: new vis.DataSet(nodeList),
     edges: new vis.DataSet(
       Object.entries(tabs)
@@ -18,7 +18,7 @@ const redraw = (tabs, tabConnections) => {
         .flat()
     ),
   };
-  var options = {
+  const options = {
     layout: {
       hierarchical: {
         nodeSpacing: 300,
@@ -28,7 +28,7 @@ const redraw = (tabs, tabConnections) => {
       hover: true,
     },
   };
-  var network = new vis.Network(container, data, options);
+  const network = new vis.Network(container, data, options);
   network.addEventListener("doubleClick", (e) => {
     console.log(`double clicked ${JSON.stringify(e.nodes, null, 2)}`);
     if (e.nodes[0]) {
