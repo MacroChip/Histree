@@ -1,7 +1,20 @@
 console.log(`graph ui alive`);
 
+const container = document.getElementById("mynetwork");
+const options = {
+  layout: {
+    hierarchical: {
+      nodeSpacing: 300,
+    },
+  },
+  interaction: {
+    hover: true,
+  },
+};
+
+let network = new vis.Network(container, {}, options);
+
 const redraw = (tabs, tabConnections) => {
-  const container = document.getElementById("mynetwork");
   const nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
@@ -18,17 +31,18 @@ const redraw = (tabs, tabConnections) => {
         .flat()
     ),
   };
-  const options = {
-    layout: {
-      hierarchical: {
-        nodeSpacing: 300,
-      },
-    },
-    interaction: {
-      hover: true,
-    },
+  const scale = network.getScale();
+  const position = network.getViewPosition();
+  const savedView = {
+    scale,
+    position,
   };
-  const network = new vis.Network(container, data, options);
+  console.log(`Queuing`, savedView);
+  network = new vis.Network(container, data, options);
+  network.once('stabilized', () => {
+    network.moveTo(savedView);
+    console.log(`moveTo`, savedView);
+  });
   network.addEventListener("doubleClick", (e) => {
     console.log(`double clicked ${JSON.stringify(e.nodes, null, 2)}`);
     if (e.nodes[0]) {
