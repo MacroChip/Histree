@@ -10,6 +10,7 @@ class Datastore {
     this.tabConnections = [];
     this.loaded = false;
     this.tabUpdated = {};
+    this.favicons = {};
   }
 
   _data() {
@@ -18,13 +19,14 @@ class Datastore {
       tabs: this.tabs,
       tabConnections: this.tabConnections,
       tabUpdated: this.tabUpdated,
+      favicons: this.favicons,
     };
   }
 
   data() {
     return new Promise(res => {
       if (!this.loaded) {
-        chrome.storage.local.get(['id', 'tabs', 'tabConnections', 'tabUpdated'], (result) => {
+        chrome.storage.local.get(['id', 'tabs', 'tabConnections', 'tabUpdated', 'favicons'], (result) => {
           console.log(`data initialized as`, result);
           if (result.id) {
             this.id = result.id;
@@ -37,6 +39,9 @@ class Datastore {
           }
           if (result.tabUpdated) {
             this.tabUpdated = result.tabUpdated;
+          }
+          if (result.favicons) {
+            this.favicons = result.favicons;
           }
           this.loaded = true;
           res(this._data());
@@ -62,6 +67,7 @@ class Datastore {
     this.tabs = {};
     this.tabConnections = [];
     this.tabUpdated = {};
+    this.favicons = {};
     await this.save();
   }
 };
@@ -76,6 +82,7 @@ const redraw = async () => {
     data: {
       tabs: data.tabs,
       tabConnections: data.tabConnections,
+      favicons: data.favicons,
     },
   });
 }
@@ -161,8 +168,8 @@ chrome.history.onVisited.addListener(async historyItem => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log(`onUpdated`, changeInfo);
-  if (changeInfo.url || changeInfo.title) {
+  console.log(`onUpdated`, changeInfo, tab);
+  if (changeInfo.url || changeInfo.title || changeInfo.favIconUrl) {
     console.log(`${tabId} updated Url ${changeInfo.url} title ${changeInfo.title}`);
     let data = await datastore.data();
     if (changeInfo.url) {
@@ -175,6 +182,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         const nodes = data.tabs[tabId].nodes;
         nodes[nodes.length - 1].label = changeInfo.title;
       }
+    }
+    if (changeInfo.favIconUrl) {
+      data.favicons[tab.url] = tab.favIconUrl;
     }
     redraw();
   }

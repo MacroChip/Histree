@@ -14,13 +14,15 @@ const options = {
 
 let network = new vis.Network(container, {}, options);
 
-const redraw = (tabs, tabConnections) => {
+const redraw = (tabs, tabConnections, favicons) => {
   const nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
     .map(item => {
       item.label = `${item.label}\n${new Date(item.lastVisitTime).toLocaleString()}`;
       item.title = item.url;
+      item.shape = 'image';
+      item.image = favicons[item.url] || chrome.extension.getURL('icon128.png');
       return item;
     });
   const data = {
@@ -59,7 +61,7 @@ const redraw = (tabs, tabConnections) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log(`onMessage`, request);
   if (request.type === "RES_GET_GRAPH") {
-    redraw(request.data.tabs, request.data.tabConnections);
+    redraw(request.data.tabs, request.data.tabConnections, request.data.favicons);
   }
 });
 
