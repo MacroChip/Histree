@@ -1,11 +1,11 @@
-add timestamps so you can browse like normal history by time
 time spent at each url?
+favicon in each node
+searchable
 hover node to see url
 pressing back button and going to new page should branch from that node, not the leaf
 right justify a new tab so that it looks like it saw the new tab immediately
 when tabs[openerTabId] has no data, could init the opener map so that the tree can backfill the opener node
 initializing data is a race condition to mutating the data (like in response to a tab being opened). make all reads and writes to state async and to and from storage api
-try separate trees in vis network for each tree
 green circle around tabs that are still open
 reparent nodes so that you can disasociate new tabs from their parent or re-associate
 thumbnails of page capture to see what page looked like when you were there
