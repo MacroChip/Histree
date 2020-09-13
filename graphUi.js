@@ -20,6 +20,7 @@ const redraw = (tabs, tabConnections) => {
     .flat()
     .map(item => {
       item.label = `${item.label}\n${new Date(item.lastVisitTime).toLocaleString()}`;
+      item.title = item.url;
       return item;
     });
   const data = {
