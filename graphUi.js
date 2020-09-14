@@ -14,15 +14,24 @@ const options = {
 
 let network = new vis.Network(container, {}, options);
 
+const ellipsize = (string) => {
+  if (string.length >= 100) {
+    return string.substring(0, 99) + "..."
+  } else {
+    return string;
+  }
+};
+
 const redraw = (tabs, tabConnections, favicons) => {
   const nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
     .map(item => {
-      item.label = `${item.label}\n${new Date(item.lastVisitTime).toLocaleString()}`;
+      item.label = `${ellipsize(item.label)}\n${new Date(item.lastVisitTime).toLocaleString()}`;
       item.title = item.url;
       item.shape = 'image';
       item.image = favicons[item.url] || chrome.extension.getURL('icon128.png');
+      item.widthConstraint = 275;
       return item;
     });
   const data = {

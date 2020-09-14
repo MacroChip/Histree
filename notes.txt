@@ -1,3 +1,6 @@
+Get background on text so that text can be read easier
+    why is line color changing when i change node color?
+update vis network
 time spent at each url?
 favicon in each node
 searchable
