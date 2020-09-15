@@ -1,6 +1,7 @@
 Get background on text so that text can be read easier
     why is line color changing when i change node color?
 update vis network
+    did 8.3.2 break hover tooltip (item.title)?
 time spent at each url?
 favicon in each node
 searchable

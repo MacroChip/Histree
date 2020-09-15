@@ -14,13 +14,7 @@ const options = {
 
 let network = new vis.Network(container, {}, options);
 
-const ellipsize = (string) => {
-  if (string.length >= 100) {
-    return string.substring(0, 99) + "..."
-  } else {
-    return string;
-  }
-};
+const ellipsize = (string) => string.length >= 100 ? string.substring(0, 99) + "..." : string;
 
 const redraw = (tabs, tabConnections, favicons) => {
   const nodeList = Object.entries(tabs)
