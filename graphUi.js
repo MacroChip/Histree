@@ -10,6 +10,11 @@ const options = {
   interaction: {
     hover: true,
   },
+  nodes: {
+    font: {
+      background: '#D2E5FF',
+    },
+  },
 };
 
 let network = new vis.Network(container, {}, options);
