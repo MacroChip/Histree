@@ -48,11 +48,11 @@ const redraw = (tabs, tabConnections, favicons) => {
     scale,
     position,
   };
-  console.log(`Queuing`, savedView);
   network = new vis.Network(container, data, options);
-  network.once('stabilized', () => {
+  console.log(`Queuing`, savedView, new Date().toLocaleString());
+  network.once('afterDrawing', () => {
     network.moveTo(savedView);
-    console.log(`moveTo`, savedView);
+    console.log(`moveTo`, savedView, new Date().toLocaleString());
   });
   network.addEventListener("doubleClick", (e) => {
     console.log(`double clicked ${JSON.stringify(e.nodes, null, 2)}`);
