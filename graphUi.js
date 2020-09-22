@@ -50,6 +50,7 @@ const redraw = (tabs, tabConnections, favicons) => {
   };
   network = new vis.Network(container, data, options);
   console.log(`Queuing`, savedView, new Date().toLocaleString());
+  // network.off('stabilized');
   network.once('afterDrawing', () => {
     network.moveTo(savedView);
     console.log(`moveTo`, savedView, new Date().toLocaleString());
