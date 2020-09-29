@@ -25,14 +25,14 @@ const redraw = (tabs, tabConnections, favicons) => {
   const nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
-    .map(item => {
-      item.label = `${ellipsize(item.label)}\n${new Date(item.lastVisitTime).toLocaleString()}`;
-      item.title = item.url;
-      item.shape = 'image';
-      item.image = favicons[item.url] || chrome.extension.getURL('icon128.png');
-      item.widthConstraint = 275;
-      return item;
-    });
+    .map(item => ({
+      ...item,
+      label: `${ellipsize(item.label)}\n${new Date(item.lastVisitTime).toLocaleString()}`,
+      title: item.url,
+      shape: 'image',
+      image: favicons[item.url] || chrome.extension.getURL('icon128.png'),
+      widthConstraint: 275,
+    }));
   const data = {
     nodes: new vis.DataSet(nodeList),
     edges: new vis.DataSet(
