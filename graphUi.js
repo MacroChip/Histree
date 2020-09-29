@@ -69,12 +69,21 @@ const redraw = (tabs, tabConnections, favicons) => {
     console.log(`hovered node ${e.node}`);
     console.log(`which is url ${nodeList.find(node => node.id === e.node).url}`);
   });
-}
+};
+
+const addData = (data) => {
+  Object.assign(datastore.tabs, data.tabs);
+  if (data.tabConnections) {
+    datastore.tabConnections = data.tabConnections;
+  }
+  Object.assign(datastore.favicons, data.favicons);
+};
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log(`onMessage`, request);
   if (request.type === "RES_GET_GRAPH") {
-    redraw(request.data.tabs, request.data.tabConnections, request.data.favicons);
+    addData(request.data);
+    redraw(datastore.tabs, datastore.tabConnections, datastore.favicons);
   }
 });
 

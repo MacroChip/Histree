@@ -7,14 +7,34 @@ const datastore = new Datastore(chrome.storage.local);
 const redraw = async () => {
   datastore.save();
   let data = await datastore.data();
+  Object.entries(data.tabs)
+    .forEach(([key, value]) => {
+      chrome.extension.sendMessage({
+        type: 'RES_GET_GRAPH',
+        data: {
+          tabs: {
+            [key]: value
+          }
+        },
+      });
+    });
   chrome.extension.sendMessage({
     type: 'RES_GET_GRAPH',
     data: {
-      tabs: data.tabs,
-      tabConnections: data.tabConnections,
-      favicons: data.favicons,
+      tabConnections: data.tabConnections
     },
   });
+  Object.entries(data.favicons)
+    .forEach(([key, value]) => {
+      chrome.extension.sendMessage({
+        type: 'RES_GET_GRAPH',
+        data: {
+          favicons: {
+            [key]: value
+          }
+        },
+      });
+    });
 }
 
 const makeNode = async (label, url, lastVisitTime) => {
