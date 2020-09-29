@@ -1,4 +1,8 @@
+import { Datastore } from './datastore.js';
+
 console.log(`graph ui alive`);
+
+const datastore = new Datastore();
 
 const container = document.getElementById("mynetwork");
 const options = {
