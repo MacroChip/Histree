@@ -18,12 +18,14 @@ const redraw = async () => {
         },
       });
     });
-  chrome.extension.sendMessage({
-    type: 'RES_GET_GRAPH',
-    data: {
-      tabConnections: data.tabConnections
-    },
-  });
+  data.tabConnections.forEach(tabConnection =>
+    chrome.extension.sendMessage({
+      type: 'RES_GET_GRAPH',
+      data: {
+        tabConnections: [tabConnection],
+      },
+    })
+  );
   Object.entries(data.favicons)
     .forEach(([key, value]) => {
       chrome.extension.sendMessage({

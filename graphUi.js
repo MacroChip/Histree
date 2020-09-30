@@ -53,7 +53,6 @@ const redraw = (tabs, tabConnections, favicons) => {
     position,
   };
   network = new vis.Network(container, data, options);
-  console.log(`Queuing`, savedView, new Date().toLocaleString());
   // network.off('stabilized');
   network.once('afterDrawing', () => {
     network.moveTo(savedView);
@@ -73,9 +72,7 @@ const redraw = (tabs, tabConnections, favicons) => {
 
 const addData = (data) => {
   Object.assign(datastore.tabs, data.tabs);
-  if (data.tabConnections) {
-    datastore.tabConnections = data.tabConnections;
-  }
+  datastore.tabConnections = datastore.tabConnections.concat(data.tabConnections || []);
   Object.assign(datastore.favicons, data.favicons);
 };
 
