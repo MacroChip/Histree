@@ -2,7 +2,7 @@ import { Datastore } from './datastore.js';
 
 console.log(`graph ui alive`);
 
-const datastore = new Datastore();
+const datastore = new Datastore(false);
 
 const container = document.getElementById("mynetwork");
 const options = {
@@ -70,17 +70,11 @@ const redraw = (tabs, tabConnections, favicons) => {
   });
 };
 
-const addData = (data) => {
-  Object.assign(datastore.tabs, data.tabs);
-  datastore.tabConnections = datastore.tabConnections.concat(data.tabConnections || []);
-  Object.assign(datastore.favicons, data.favicons);
-};
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(`onMessage`, request);
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  // console.log(`onMessage`, request);
   if (request.type === "RES_GET_GRAPH") {
-    addData(request.data);
-    redraw(datastore.tabs, datastore.tabConnections, datastore.favicons);
+    const data = await datastore.data();
+    redraw(data.tabs, data.tabConnections, data.favicons);
   }
 });
 

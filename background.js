@@ -2,46 +2,23 @@
 
 import { Datastore } from './datastore.js';
 
-const datastore = new Datastore(chrome.storage.local);
+const datastore = new Datastore(true);
 
 const redraw = async () => {
   datastore.save();
-  let data = await datastore.data();
-  Object.entries(data.tabs)
-    .forEach(([key, value]) => {
-      chrome.extension.sendMessage({
-        type: 'RES_GET_GRAPH',
-        data: {
-          tabs: {
-            [key]: value
-          }
-        },
-      });
-    });
-  data.tabConnections.forEach(tabConnection =>
-    chrome.extension.sendMessage({
-      type: 'RES_GET_GRAPH',
-      data: {
-        tabConnections: [tabConnection],
-      },
-    })
-  );
-  Object.entries(data.favicons)
-    .forEach(([key, value]) => {
-      chrome.extension.sendMessage({
-        type: 'RES_GET_GRAPH',
-        data: {
-          favicons: {
-            [key]: value
-          }
-        },
-      });
-    });
+  chrome.extension.sendMessage({
+    type: 'RES_GET_GRAPH',
+  });
 }
 
 const makeNode = async (label, url, lastVisitTime) => {
   let data = await datastore.data();
-  const newNode = { "id": data.id.id, label, url, lastVisitTime };
+  const newNode = {
+    id: data.id.id,
+    label,
+    url,
+    lastVisitTime,
+  };
   data.id.id += 1;
   return newNode;
 };
@@ -98,7 +75,10 @@ const addNodeToExistingTabTree = async (data, tabId, title, url, lastVisitTime) 
   nodes.push(await makeNode(title, url, lastVisitTime));
   const lastNode = nodes[nodes.length - 2];
   if (lastNode) {
-    edges.push({ from: lastNode.id, to: data.id.id - 1 });
+    edges.push({
+      from: lastNode.id,
+      to: data.id.id - 1,
+    });
   }
 };
 

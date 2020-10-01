@@ -1,13 +1,14 @@
 export class Datastore {
 
-  constructor(storage) {
+  constructor(canCache) {
     this.id = { id: 0 };
     this.tabs = {};
     this.tabConnections = [];
-    this.loaded = !storage;
+    this.loaded = false;
     this.tabUpdated = {};
     this.favicons = {};
-    this.storage = storage;
+    this.storage = chrome.storage.local;
+    this.canCache = canCache;
   }
 
   _data() {
@@ -40,7 +41,9 @@ export class Datastore {
           if (result.favicons) {
             this.favicons = result.favicons;
           }
-          this.loaded = true;
+          if (this.canCache) {
+            this.loaded = true;
+          }
           res(this._data());
         });
       } else {
@@ -50,15 +53,13 @@ export class Datastore {
   };
 
   save() {
-    if (this.storage) {
-      const newData = this._data();
-      return new Promise(res => {
-        this.storage.set(newData, () => {
-          console.log(`Saved data as`, newData);
-          res();
-        });
+    const newData = this._data();
+    return new Promise(res => {
+      this.storage.set(newData, () => {
+        console.log(`Saved data as`, newData);
+        res();
       });
-    }
+    });
   }
 
   async reset() {
