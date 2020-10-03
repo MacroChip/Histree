@@ -3,6 +3,7 @@ import { Datastore } from './datastore.js';
 console.log(`graph ui alive`);
 
 const datastore = new Datastore(false);
+let savedView = { sacle: 1, position: { x: 0, y: 0 } };
 
 const container = document.getElementById("mynetwork");
 const options = {
@@ -48,13 +49,16 @@ const redraw = (tabs, tabConnections, favicons) => {
   };
   const scale = network.getScale();
   const position = network.getViewPosition();
-  const savedView = {
+  const newSavedView = {
     scale,
     position,
   };
+  if (newSavedView.scale != 1 || newSavedView.position.x != 0 || newSavedView.position.y != 0) {
+    savedView = newSavedView;
+    console.log(`saved`, newSavedView);
+  }
   network.destroy();
   network = new vis.Network(container, data, options);
-  // network.off('stabilized');
   network.once('afterDrawing', () => {
     network.moveTo(savedView);
     console.log(`moveTo`, savedView, new Date().toLocaleString());
