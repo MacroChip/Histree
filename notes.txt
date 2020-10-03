@@ -1,5 +1,9 @@
+performance:
+    debounce the redraw (either on call side or receive side)
+    progress indicator while redrawing
+    have one network preparing in the background while the other is interactable
 time spent at each url?
-why is text background so much larger than text?
+stop text background of one node from drawing over another node
 searchable
 pressing back button and going to new page should branch from that node, not the leaf
 right justify a new tab so that it looks like it saw the new tab immediately
@@ -7,8 +11,6 @@ when tabs[openerTabId] has no data, could init the opener map so that the tree c
 initializing data is a race condition to mutating the data (like in response to a tab being opened). make all reads and writes to state async and to and from storage api
 green circle around tabs that are still open
 reparent nodes so that you can disasociate new tabs from their parent or re-associate
-remove new tab node?
-secure messages passed back and forth. I think any webpage could receive and send messages to and from me
 transpile to lower ecmascript for older browsers
 ctrl shift h keeps only one instance of tree up
 are tab ids consistent across restarts when "pick up where you left of" setting is set? wondering if the tree will continue between restarts
