@@ -52,6 +52,7 @@ const redraw = (tabs, tabConnections, favicons) => {
     scale,
     position,
   };
+  network.destroy();
   network = new vis.Network(container, data, options);
   // network.off('stabilized');
   network.once('afterDrawing', () => {
