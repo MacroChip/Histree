@@ -20,6 +20,9 @@ const options = {
       background: '#D2E5FF',
     },
   },
+  physics: {
+    enabled: false,
+  },
 };
 
 let network = new vis.Network(container, {}, options);
