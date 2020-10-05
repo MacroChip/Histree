@@ -2,6 +2,7 @@ performance:
     debounce the redraw (either on call side or receive side)
     progress indicator while redrawing
     have one network preparing in the background while the other is interactable
+now that physics is disabled, graph renders at default viewport before changing to savedView
 time spent at each url?
 stop text background of one node from drawing over another node
 searchable
