@@ -4,6 +4,40 @@ console.log(`graph ui alive`);
 
 const datastore = new Datastore(false);
 let savedView = { sacle: 1, position: { x: 0, y: 0 } };
+let filterIndex = 0;
+let nodeList = [];
+let nodesMatchingFilter = [];
+
+document.getElementById('filterNext').addEventListener('click', (e) => {
+  filterIndex = (filterIndex + 1) % nodesMatchingFilter.length;
+  findAndFit();
+});
+
+const findAndFit = () => {
+  if (network.getScale() != 1) {
+    network.moveTo({
+      scale: 1,
+    });
+  }
+  const filterText = document.getElementById("filter").value;
+  //todo case insensitive
+  nodesMatchingFilter = nodeList.filter(item => item.url.includes(filterText) || item.label.includes(filterText)) || [];
+  const ids = nodesMatchingFilter.map(item => item.id);
+  console.log(nodesMatchingFilter.map(item => item.url));
+  if (ids.length) {
+    network.fit({
+      nodes: [ids[filterIndex]],
+      animation: {
+        duration: 200,
+      },
+    });
+  }
+}
+
+document.getElementById("filter").addEventListener('input', (e) => {
+  filterIndex = 0;
+  findAndFit();
+});
 
 const container = document.getElementById("mynetwork");
 const options = {
@@ -31,7 +65,7 @@ let network = new vis.Network(container, {}, options);
 const ellipsize = (string) => string.length >= 100 ? string.substring(0, 99) + "..." : string;
 
 const redraw = (tabs, tabConnections, favicons) => {
-  const nodeList = Object.entries(tabs)
+  nodeList = Object.entries(tabs)
     .map(([key, value]) => value.nodes)
     .flat()
     .map(item => ({
