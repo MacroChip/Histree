@@ -19,6 +19,7 @@ const options = {
     font: {
       background: '#D2E5FF',
     },
+    brokenImage: chrome.extension.getURL('icon128.png'),
   },
   physics: {
     enabled: false,
