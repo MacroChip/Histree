@@ -6,8 +6,11 @@
 </head>
 <button id="reset">Reset history</button>
 <h1>Double click a circle to open it</h1>
-<input id="filter" type="text"></input>
-<button id="filterNext">Next</button>
+<form>
+    <label for="filter">Search:</label>
+    <input id="filter" type="text"></input>
+    <button type="submit" id="filterNext">Next</button>
+</form>
 <div id="mynetwork"></div>
 <script type="module" src="./datastore.js"></script>
 <script type="module" src="./vis-network.js"></script>

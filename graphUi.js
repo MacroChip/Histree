@@ -9,6 +9,7 @@ let nodeList = [];
 let nodesMatchingFilter = [];
 
 document.getElementById('filterNext').addEventListener('click', (e) => {
+  e.preventDefault();
   filterIndex = (filterIndex + 1) % nodesMatchingFilter.length;
   findAndFit();
 });
