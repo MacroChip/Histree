@@ -20,9 +20,8 @@ const findAndFit = () => {
       scale: 1,
     });
   }
-  const filterText = document.getElementById("filter").value;
-  //todo case insensitive
-  nodesMatchingFilter = nodeList.filter(item => item.url.includes(filterText) || item.label.includes(filterText)) || [];
+  const filterText = document.getElementById("filter").value.toLowerCase();
+  nodesMatchingFilter = nodeList.filter(item => item.url.toLowerCase().includes(filterText) || item.label.toLowerCase().includes(filterText)) || [];
   const ids = nodesMatchingFilter.map(item => item.id);
   console.log(nodesMatchingFilter.map(item => item.url));
   if (ids.length) {

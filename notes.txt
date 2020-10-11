@@ -5,7 +5,6 @@ performance:
 now that physics is disabled, graph renders at default viewport before changing to savedView
 time spent at each url?
 stop text background of one node from drawing over another node
-searchable
 pressing back button and going to new page should branch from that node, not the leaf
 right justify a new tab so that it looks like it saw the new tab immediately
 when tabs[openerTabId] has no data, could init the opener map so that the tree can backfill the opener node
