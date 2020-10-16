@@ -20,6 +20,8 @@ document.getElementById('filterPrevious').addEventListener('click', (e) => {
   findAndFit();
 });
 
+$('#exampleModal').on('shown.bs.modal', () => $('#reset').trigger('focus'));
+
 const findAndFit = () => {
   if (network.getScale() != 1) {
     network.moveTo({
