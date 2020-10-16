@@ -14,6 +14,12 @@ document.getElementById('filterNext').addEventListener('click', (e) => {
   findAndFit();
 });
 
+document.getElementById('filterPrevious').addEventListener('click', (e) => {
+  e.preventDefault();
+  filterIndex = (filterIndex - 1 + nodesMatchingFilter.length) % nodesMatchingFilter.length;
+  findAndFit();
+});
+
 const findAndFit = () => {
   if (network.getScale() != 1) {
     network.moveTo({
@@ -114,7 +120,6 @@ const redraw = (tabs, tabConnections, favicons) => {
 };
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  // console.log(`onMessage`, request);
   if (request.type === "RES_GET_GRAPH") {
     const data = await datastore.data();
     redraw(data.tabs, data.tabConnections, data.favicons);
