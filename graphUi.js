@@ -21,6 +21,7 @@ document.getElementById('filterPrevious').addEventListener('click', (e) => {
 });
 
 $('#exampleModal').on('shown.bs.modal', () => $('#reset').trigger('focus'));
+$('#exampleModal').on('hide.bs.modal', () => setTimeout(() => $('#filter').trigger('focus'), 500));
 
 const findAndFit = () => {
   if (network.getScale() != 1) {
@@ -46,6 +47,8 @@ document.getElementById("filter").addEventListener('input', (e) => {
   filterIndex = 0;
   findAndFit();
 });
+
+$('#filter').trigger('focus');
 
 const container = document.getElementById("mynetwork");
 const options = {
