@@ -10,14 +10,18 @@ let nodesMatchingFilter = [];
 
 document.getElementById('filterNext').addEventListener('click', (e) => {
   e.preventDefault();
-  filterIndex = (filterIndex + 1) % nodesMatchingFilter.length;
-  findAndFit();
+  if (document.getElementById("filter").value) {
+    filterIndex = (filterIndex + 1) % nodesMatchingFilter.length;
+    findAndFit();
+  }
 });
 
 document.getElementById('filterPrevious').addEventListener('click', (e) => {
   e.preventDefault();
-  filterIndex = (filterIndex - 1 + nodesMatchingFilter.length) % nodesMatchingFilter.length;
-  findAndFit();
+  if (document.getElementById("filter").value) {
+    filterIndex = (filterIndex - 1 + nodesMatchingFilter.length) % nodesMatchingFilter.length;
+    findAndFit();
+  }
 });
 
 $('#exampleModal').on('shown.bs.modal', () => $('#reset').trigger('focus'));
