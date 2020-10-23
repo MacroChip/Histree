@@ -1,6 +1,6 @@
 {
   "name": "Histree",
-  "version": "1.5",
+  "version": "1.6",
   "description": "View your browsing history as a tree",
   "permissions": [
     "http://*/*",
