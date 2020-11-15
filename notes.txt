@@ -1,3 +1,4 @@
+BUG: filter, then close tab then ctrl + shift + T then press enter. filter text is present but im not sure about the state of everything else
 exporting (with watermark?)
 performance:
     debounce the redraw (either on call side or receive side)
